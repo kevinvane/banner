@@ -12,6 +12,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -554,6 +555,20 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
         return setCurrentItem(position, true);
     }
 
+    /**
+     * 跳转到下一个位置（最好在设置了数据后在调用，不然没有意义）
+     * 备注：kevinvane update
+     * @return
+     */
+    public Banner setNextItem(boolean smoothScroll) {
+        var next = (getCurrentItem() + 1) % getItemCount();
+        // 如果是边缘Item，强制赋值smoothScroll = false
+        if(next == 0 || next == getItemCount() - 1){
+            Log.d("banner", "setNextItem: 边缘Item，禁止动画效果");
+            smoothScroll = false;
+        }
+        return setCurrentItem(next, smoothScroll);
+    }
     /**
      * 跳转到指定位置（最好在设置了数据后在调用，不然没有意义）
      * @param position

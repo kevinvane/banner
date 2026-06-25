@@ -14,9 +14,6 @@ import com.youth.banner.util.BannerUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 
 public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> implements IViewHolder<T, VH> {
     protected List<T> mDatas = new ArrayList<>();
@@ -77,6 +74,7 @@ public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> exten
         T data = mDatas.get(real);
         holder.itemView.setTag(R.id.banner_data_key, data);
         holder.itemView.setTag(R.id.banner_pos_key, real);
+        holder.itemView.setTag(R.id.banner_item_pos_key, position);
         onBindView(holder, mDatas.get(real), real, getRealCount());
         if (mOnBannerListener != null) {
             holder.itemView.setOnClickListener(view -> mOnBannerListener.OnBannerClick(data, real));
@@ -109,6 +107,16 @@ public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> exten
 
     public int getRealPosition(int position) {
         return BannerUtils.getRealPosition(mIncreaseCount == BannerConfig.INCREASE_COUNT, position, getRealCount());
+    }
+
+    /**
+     * 判断是否是假的边界item
+     * 备注：kevinvane Add
+     * @param fakePosition
+     * @return
+     */
+    public boolean isFakeBorderItem(int fakePosition){
+        return fakePosition == 0 || fakePosition == getItemCount() - 1;
     }
 
     public void setOnBannerListener(OnBannerListener<T> listener) {
